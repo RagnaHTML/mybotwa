@@ -19,22 +19,8 @@ npm install || { echo "❌ npm install gagal"; exit 1; }
 echo "📦 install pm2 secara local..."
 npm install pm2 || { echo "❌ install pm2 gagal"; exit 1; }
 
-# cari file utama bot secara otomatis
-ENTRY_FILE=""
-for file in index.js main.js; do
-  if [ -f "$file" ]; then
-    ENTRY_FILE="$file"
-    break
-  fi
-done
-
-if [ -z "$ENTRY_FILE" ]; then
-  echo "❌ gak nemu file utama (index.js / bot.js / main.js / dll)"
-  exit 1
-fi
-
 echo "🚀 jalankan bot pake pm2 local..."
-npx pm2 start "$ENTRY_FILE" --name wa-bot
+npx pm2 start index.js --name wa-bot || npx pm2 start main.js
 npx pm2 save
 npx pm2 startup
 
