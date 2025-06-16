@@ -2,128 +2,77 @@
 
 clear
 echo ""
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-echo "        ⚙ 𝘀𝘆𝘀𝘁𝗲𝗺 𝗲𝗻𝘃 𝗯𝗼𝘁 𝗶𝗻𝗶𝘁𝗶𝗮𝗹𝗶𝘇𝗮𝘁𝗶𝗼𝗻"
-echo "         setup otomatis untuk project bot wa"
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-sleep 1
+echo "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+echo "     🚀  𝐏𝐑𝐎𝐉𝐄𝐂𝐓 𝐈𝐍𝐈𝐓 - 𝐁𝐎𝐓 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐀𝐔𝐓𝐎𝐌𝐀𝐓𝐈𝐎𝐍     "
+echo "                      crafted with ❤️ by bella devtools                                       "
+echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+sleep 0.8
 
-# ⬛ step 1: validasi dan instal dependency
 echo ""
-echo "📦 [1/4] memeriksa dependency project..."
+echo "📦 [1/6] memverifikasi environment pengembangan..."
+echo "    └─> memastikan runtime minimum tersedia..."
+sleep 0.6
+command -v node >/dev/null 2>&1 || { echo "    ❌ node.js tidak ditemukan."; exit 1; }
+command -v pnpm >/dev/null 2>&1 || { echo "    ❌ pnpm belum terpasang."; exit 1; }
+echo "    ✅ node.js ditemukan → $(node -v)"
+echo "    ✅ pnpm tersedia     → v$(pnpm -v)"
+sleep 0.5
+
+echo ""
+echo "📦 [2/6] memeriksa dependency project..."
 echo "    └─> membaca file 'package.json'..."
-sleep 1
+sleep 0.6
+[ ! -f package.json ] && { echo "    ❌ package.json tidak ditemukan."; exit 1; }
+echo "    📚 menginstall seluruh dependency..."
 pnpm install > /dev/null 2>&1 \
-  && echo "    ✅ semua dependency berhasil di-install." \
-  || { echo "    ❌ gagal install dependency via pnpm."; exit 1; }
+  && echo "    ✅ dependency berhasil di-install." \
+  || { echo "    ❌ gagal install dependency."; exit 1; }
 
-# ⬛ step 2: setup pm2 (local dev only)
 echo ""
-echo "📦 [2/4] setup process manager (pm2)"
-echo "    └─> memasang pm2 secara lokal (devDependency)..."
-sleep 1
-pnpm add pm2 -D > /dev/null 2>&1 \
-  && echo "    ✅ pm2 berhasil dipasang secara lokal." \
-  || { echo "    ❌ gagal install pm2."; exit 1; }
+echo "📦 [3/6] memasang process manager (pm2)..."
+pnpm add -D pm2 > /dev/null 2>&1 \
+  && echo "    ✅ pm2 berhasil dipasang (devDependencies)" \
+  || { echo "    ❌ gagal memasang pm2."; exit 1; }
 
-# ⬛ step 3: deteksi entry point file
 echo ""
-echo "🔍 [3/4] mencari file utama bot (entry file)..."
+echo "🔎 [4/6] mendeteksi file utama project..."
 ENTRY_FILE=""
-for file in index.js main.js bot.js; do
+for file in index.js main.js bot.js src/index.js; do
   if [ -f "$file" ]; then
     ENTRY_FILE="$file"
-    echo "    ✅ ditemukan: $file"
+    echo "    ✅ ditemukan: '$ENTRY_FILE'"
     break
   fi
 done
+[ -z "$ENTRY_FILE" ] && { echo "    ❌ tidak ada file entry point ditemukan."; exit 1; }
 
-if [ -z "$ENTRY_FILE" ]; then
-  echo "    ❌ tidak ditemukan file utama (index.js / main.js / bot.js)"
-  exit 1
-fi
+echo ""
+echo "📂 [5/6] memverifikasi struktur direktori..."
+[ -d src ] && echo "    📁 folder 'src/' ✔️" || echo "    ⚠️ folder 'src/' tidak ditemukan (opsional)"
+[ -d node_modules ] && echo "    📁 node_modules ✔️" || echo "    ⚠️ folder belum keinstall?"
 
-# ⬛ step 4: recap dan next action
 echo ""
-echo "🚀 [4/4] environment berhasil disiapkan!"
-sleep 0.8
+echo "🎉 [6/6] setup selesai!"
+sleep 0.5
 echo ""
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-echo "         𝗣𝗥𝗢𝗝𝗘𝗖𝗧 𝗦𝗘𝗧𝗨𝗣 𝗦𝗘𝗟𝗘𝗦𝗔𝗜 ✅"
-echo "     semua kebutuhan environment telah siap."
-echo "     silakan jalankan bot secara manual via pm2:"
+echo "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+echo "      ✅ 𝐒𝐄𝐓𝐔𝐏 𝐁𝐎𝐓 𝐖𝐇𝐀𝐓𝐒𝐀𝐏𝐏 𝐁𝐄𝐑𝐇𝐀𝐒𝐈𝐋       "
+echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
 echo ""
-echo "  📌 jalankan bot  :  pnpm dlx pm2 start $ENTRY_FILE --name wa-bot"
-echo "  📌 stop bot      :  pnpm dlx pm2 stop wa-bot"
-echo "  📌 restart bot   :  pnpm dlx pm2 restart wa-bot"
-echo "  📌 simpan state  :  pnpm dlx pm2 save"
-echo "  📌 auto-reboot   :  pnpm dlx pm2 startup"
+echo "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮"
+echo "   🔥 𝐁𝐄𝐋𝐋𝐀 𝐒𝐈𝐀𝐏 𝐃𝐈𝐆𝐔𝐍𝐀𝐊𝐀𝐍, 𝐔𝐍𝐓𝐔𝐊 🔥         "
+echo "                                                                                         "
+echo "    ❁ ᴍᴇɴɢʜᴀᴅɪʀᴋᴀɴ ʙᴏᴛ ᴡʜᴀᴛꜱᴀᴘᴘ ʏᴀɴɢ sᴛᴀʙɪʟ     "
+echo "    ❁ ᴘᴇɴɢᴏʟᴀʜᴀɴ ᴘᴇʀɪɴᴛᴀʜ ᴄᴇᴘᴀᴛ & ᴀᴋᴜʀᴀᴛ            "
+echo "    ❁ ᴘᴇɴᴅᴜᴋᴜɴɢ ᴍᴏᴅᴜʟᴇ ᴄᴜsᴛᴏᴍ & ᴀᴜᴛᴏ-ʀᴜɴ          "
+echo "    ❁ ᴋʟᴀʀɪꜰɪᴋᴀꜱɪ ʟᴏɢ ʏᴀɴɢ ᴛᴇʀsᴛʀᴜᴋᴛᴜʀ                   "
+echo "    ❁ sɪᴀᴘ ᴅɪᴘᴀᴋᴀɪ ᴊᴀɴɢᴋᴀ ᴘᴀɴᴊᴀɴɢ 📦                       "
+echo "                                                                                           "
+echo "   ✪ ᴅɪʀᴀɴᴄᴀɴɢ ᴅᴇɴɢᴀɴ sᴛᴀɴᴅᴀʀ ᴘʀᴏᴅᴜᴋsɪᴋ              "
+echo "   ✪ ʟᴀʏᴀᴋ ᴅɪᴊᴀᴅɪᴋᴀɴ ᴘʀᴏᴊᴇᴋ ᴊᴀɴɢᴋᴀ ᴘᴀɴᴊᴀɴɢ          "
+echo "   ✪ ᴏᴛᴏᴍᴀᴛɪs ʀᴇʟᴏᴀᴅ & ᴋᴏɴꜰɪɢᴜʀᴀsɪ sᴛᴀᴛɪs               "
+echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
 echo ""
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-echo "         𝘁𝗶𝗽: pm2 save & startup untuk auto start"
-echo "         𝗻𝗼𝘁𝗲: script ini  sudah siap di run 24 jam."
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"#!/bin/bash
-
-clear
+echo "𓅯 𝙭͢𝙚𝙤𝙣 𝙧͢𝙖𝙙𝙚𝙤𝙣... "
 echo ""
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-echo "        ⚙ 𝘀𝘆𝘀𝘁𝗲𝗺 𝗲𝗻𝘃 𝗯𝗼𝘁 𝗶𝗻𝗶𝘁𝗶𝗮𝗹𝗶𝘇𝗮𝘁𝗶𝗼𝗻"
-echo "         setup otomatis untuk project bot wa"
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-sleep 1
-
-# ⬛ step 1: validasi dan instal dependency
-echo ""
-echo "📦 [1/4] memeriksa dependency project..."
-echo "    └─> membaca file 'package.json'..."
-sleep 1
-pnpm install > /dev/null 2>&1 \
-  && echo "    ✅ semua dependency berhasil di-install." \
-  || { echo "    ❌ gagal install dependency via pnpm."; exit 1; }
-
-# ⬛ step 2: setup pm2 (local dev only)
-echo ""
-echo "📦 [2/4] setup process manager (pm2)"
-echo "    └─> memasang pm2 secara lokal (devDependency)..."
-sleep 1
-pnpm add pm2 -D > /dev/null 2>&1 \
-  && echo "    ✅ pm2 berhasil dipasang secara lokal." \
-  || { echo "    ❌ gagal install pm2."; exit 1; }
-
-# ⬛ step 3: deteksi entry point file
-echo ""
-echo "🔍 [3/4] mencari file utama bot (entry file)..."
-ENTRY_FILE=""
-for file in index.js main.js bot.js; do
-  if [ -f "$file" ]; then
-    ENTRY_FILE="$file"
-    echo "    ✅ ditemukan: $file"
-    break
-  fi
-done
-
-if [ -z "$ENTRY_FILE" ]; then
-  echo "    ❌ tidak ditemukan file utama (index.js / main.js / bot.js)"
-  exit 1
-fi
-
-# ⬛ step 4: recap dan next action
-echo ""
-echo "🚀 [4/4] environment berhasil disiapkan!"
-sleep 0.8
-echo ""
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-echo "         𝗣𝗥𝗢𝗝𝗘𝗖𝗧 𝗦𝗘𝗧𝗨𝗣 𝗦𝗘𝗟𝗘𝗦𝗔𝗜 ✅"
-echo "     semua kebutuhan environment telah siap."
-echo "     silakan jalankan bot secara manual via pm2:"
-echo ""
-echo "  📌 jalankan bot  :  pnpm dlx pm2 start $ENTRY_FILE --name wa-bot"
-echo "  📌 stop bot      :  pnpm dlx pm2 stop wa-bot"
-echo "  📌 restart bot   :  pnpm dlx pm2 restart wa-bot"
-echo "  📌 simpan state  :  pnpm dlx pm2 save"
-echo "  📌 auto-reboot   :  pnpm dlx pm2 startup"
-echo ""
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
-echo "         𝘁𝗶𝗽: pm2 save & startup untuk auto start"
-echo "         𝗻𝗼𝘁𝗲: script ini  sudah siap di run 24 jam."
-echo "✧━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✧"
+echo "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
